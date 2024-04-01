@@ -22,6 +22,8 @@ public class LogAnalyzer
         // Create the array object to hold the hourly
         // access counts.
         hourCounts = new int[24];
+        dayCounts = new int[28];
+        monthCounts = new int[12];
         // Create the reader to obtain the data.
         reader = new LogfileReader(fileName);
     }
@@ -29,6 +31,14 @@ public class LogAnalyzer
         int total = 0;
         // Add the value in each element of hourCounts to total.
         for (int count : hourCounts) {
+            total += count;
+        }
+        return total;
+    }
+     public int numberOfAccessesMonth() {
+        int total = 0;
+        // Add the value in each element of hourCounts to total.
+        for (int count : monthCounts) {
             total += count;
         }
         return total;
@@ -45,24 +55,24 @@ public class LogAnalyzer
         }
     }
     /**
-     * Analyze the hourly access data from the log file.
+     * Analyze the daily access data from the log file.
      */
     public void analyzeDailyData()
     {
         while(reader.hasNext()) {
             LogEntry entry = reader.next();
-            int Day = entry.getDay();
+            int Day = entry.getDay() - 1;
             dayCounts[Day]++;
         }
     }
      /**
-     * Analyze the hourly access data from the log file.
+     * Analyze the monthly access data from the log file.
      */
     public void analyzeMonthlyData()
     {
         while(reader.hasNext()) {
             LogEntry entry = reader.next();
-            int month = entry.getMonth();
+            int month = entry.getMonth() - 1;
             monthCounts[month]++;
         }
     }
@@ -139,8 +149,8 @@ public class LogAnalyzer
         int busiestDay = 0;
         int maxAccesses = 0;
 
-        for (int day = 0; day < hourCounts.length; day++) {
-            if (hourCounts[day] > maxAccesses) {
+        for (int day = 0; day < dayCounts.length; day++) {
+            if (dayCounts[day] > maxAccesses) {
                 maxAccesses = hourCounts[day];
                 busiestDay = day;
             }
@@ -157,8 +167,8 @@ public class LogAnalyzer
         int quietestDay = 0;
         int minAccesses = Integer.MAX_VALUE;
 
-        for (int day = 0; day < hourCounts.length; day++) {
-            if (hourCounts[day] < minAccesses) {
+        for (int day = 0; day < dayCounts.length; day++) {
+            if (dayCounts[day] < minAccesses) {
                 minAccesses = hourCounts[day];
                 quietestDay = day;
             }
@@ -181,16 +191,16 @@ public class LogAnalyzer
     
      /**
      * Determines the month based on the day of the month.
-     * Assumes a 30-day month.
+     * Assumes a 28-day month.
      * 
-     * @param day The day of the month (1-30).
+     * @param day The day of the month (1-28).
      * @return The index of the month (0 for January, 11 for December).
      */
     private int determineMonth(int day) {
-        // Day ranges for each month (assuming a 30-day month)
-        int[] monthRanges = {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};
+        // Day ranges for each month (assuming a 28-day month)
+        int[] monthRanges = {0, 28, 56, 84, 112, 140, 168, 196, 224, 252, 280, 308};
 
-        // Determine the month based on the day
+        
         for (int month = 0; month < monthRanges.length; month++) {
             if (day <= monthRanges[month]) {
                 return month;
@@ -211,14 +221,32 @@ public class LogAnalyzer
             int busiestMonth = 0;
             int maxAccesses = 0;
     
-        for (int month = 0; month < dayCounts.length; month++) {
-            if (hourCounts[month] > maxAccesses) { // Changed dayCounts to hourCounts
-                maxAccesses = hourCounts[month];
+        for (int month = 0; month < monthCounts.length; month++) {
+            if (monthCounts[month] > maxAccesses) {
+                maxAccesses = monthCounts[month];
                 busiestMonth = month;
             }
         }
 
         return busiestMonth;
+    }
+    /**
+     * Finds the quietest month based on the number of accesses recorded in the log file.
+     * 
+     * @return The month lowest number of accesses.
+     */
+        public int quietestMonth() {
+        int quietestMonth = 0;
+        int minAccesses = Integer.MAX_VALUE;
+
+        for (int month = 0; month < monthCounts.length; month++) {
+            if (monthCounts[month] < minAccesses) {
+                minAccesses = monthCounts[month];
+                quietestMonth = month;
+            }
+        }
+
+        return quietestMonth;
     }
     /**
      * Print the lines of data read by the LogfileReader
