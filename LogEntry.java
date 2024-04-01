@@ -6,8 +6,10 @@ import java.util.Calendar;
  * Individual fields are made available via
  * accessors such as getHour() and getMinute().
  * 
- * @author David J. Barnes and Michael Kölling.
- * @version    2016.02.29
+ * Modification: Added methods to retrieve day and year.
+ * 
+ * @author Chris Compierchio
+ * @version    2024.30.3
  */
 public class LogEntry implements Comparable<LogEntry>
 {
@@ -21,10 +23,8 @@ public class LogEntry implements Comparable<LogEntry>
     // from a log line are stored.
     private static final int YEAR = 0, MONTH = 1, DAY = 2,
                              HOUR = 3, MINUTE = 4;
-    // The number of fields. If more fields are added, e.g. for
-    // seconds or a status code, then this value must be increased
-    // to match.
-    private static final int NUMBER_OF_FIELDS = 5;
+    // Modification: Added MONTH field
+    private static final int NUMBER_OF_FIELDS = 6; // Increased for the month field
                       
     /**
      * Decompose a log line so that the individual fields
@@ -79,6 +79,37 @@ public class LogEntry implements Comparable<LogEntry>
     public int getMinute()
     {
         return dataValues[MINUTE];
+    }
+
+    /**
+     * Return the month.
+     * @return The month field from the log line.
+     */
+    public int getMonth()
+    {
+        return dataValues[MONTH];
+    }
+    
+    /**
+     * Return the day.
+     * @return The day field from the log line.
+     * 
+     * Modification: Added method to retrieve the day.
+     */
+    public int getDay()
+    {
+        return dataValues[DAY];
+    }
+
+    /**
+     * Return the year.
+     * @return The year field from the log line.
+     * 
+     * Modification: Added method to retrieve the year.
+     */
+    public int getYear()
+    {
+        return dataValues[YEAR];
     }
     
     /**

@@ -16,8 +16,8 @@ import java.util.Scanner;
  *    year month day hour minute
  * Log entries are sorted into ascending order of date.
  * 
- * @author David J. Barnes and Michael Kölling.
- * @version    2016.02.29
+ * @author Chris Compierchio
+ * @version     2024.30.3
  */
 public class LogfileReader implements Iterator<LogEntry>
 {
